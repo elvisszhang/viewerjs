@@ -5,7 +5,7 @@
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-07-15T10:10:54.376Z
+ * Date: 2018-10-20T07:05:19.753Z
  */
 
 (function (global, factory) {
@@ -574,30 +574,6 @@
       element.dataset[name] = data;
     } else {
       element.setAttribute('data-' + hyphenate(name), data);
-    }
-  }
-
-  /**
-   * Remove data from the given element.
-   * @param {Element} element - The target element.
-   * @param {string} name - The data key to remove.
-   */
-  function removeData(element, name) {
-    if (isObject(element[name])) {
-      try {
-        delete element[name];
-      } catch (e) {
-        element[name] = undefined;
-      }
-    } else if (element.dataset) {
-      // #128 Safari not allows to delete dataset property
-      try {
-        delete element.dataset[name];
-      } catch (e) {
-        element.dataset[name] = undefined;
-      }
-    } else {
-      element.removeAttribute('data-' + hyphenate(name));
     }
   }
 
@@ -1519,10 +1495,11 @@
 
       if (e.changedTouches) {
         forEach(e.changedTouches, function (touch) {
-          assign(pointers[touch.identifier], getPointer(touch, true));
+          // // The first parameter should not be undefined in some browsers
+          assign(pointers[touch.identifier] || {}, getPointer(touch, true));
         });
       } else {
-        assign(pointers[e.pointerId || 0], getPointer(e, true));
+        assign(pointers[e.pointerId || 0] || {}, getPointer(e, true));
       }
 
       this.change(e);
@@ -1758,6 +1735,7 @@
             once: true
           });
           this.zoomTo(0, false, false, true);
+          setTimeout(hide, 100); // 当上层弹出时，不知道为啥 EVENT_TRANSITION_END 事件没触发，加个时钟确保隐藏
         } else {
           hide();
         }
@@ -2587,7 +2565,7 @@
           options = this.options;
 
 
-      if (!getData(element, NAMESPACE)) {
+      if (!element[NAMESPACE]) {
         return this;
       }
 
@@ -2637,7 +2615,7 @@
         removeListener(element, EVENT_CLICK, this.onStart);
       }
 
-      removeData(element, NAMESPACE);
+      element[NAMESPACE] = undefined;
       return this;
     }
   };
@@ -2848,11 +2826,11 @@
             options = this.options;
 
 
-        if (getData(element, NAMESPACE)) {
+        if (element[NAMESPACE]) {
           return;
         }
 
-        setData(element, NAMESPACE, this);
+        element[NAMESPACE] = this;
 
         var isImg = element.tagName.toLowerCase() === 'img';
         var images = [];
@@ -2875,7 +2853,7 @@
         this.length = images.length;
         this.images = images;
 
-        var ownerDocument = element.ownerDocument;
+        var ownerDocument = document;
 
         var body = ownerDocument.body || ownerDocument.documentElement;
 
@@ -2884,7 +2862,7 @@
         this.initialBodyPaddingRight = window.getComputedStyle(body).paddingRight;
 
         // Override `transition` option if it is not supported
-        if (isUndefined(document.createElement(NAMESPACE).style.transition)) {
+        if (isUndefined(ownerDocument.createElement(NAMESPACE).style.transition)) {
           options.transition = false;
         }
 
@@ -3075,7 +3053,7 @@
 
 
           if (isString(container)) {
-            container = element.ownerDocument.querySelector(container);
+            container = document.querySelector(container);
           }
 
           if (!container) {

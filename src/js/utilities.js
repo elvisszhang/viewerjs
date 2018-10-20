@@ -437,13 +437,12 @@ export function dispatchEvent(element, type, data) {
  * @param {Element} element - The target element.
  * @returns {Object} The offset data.
  */
-export function getOffset(element,options) {
+export function getOffset(element) {
   const box = element.getBoundingClientRect();
-  const ownerDocument = options.topView ? top.document : document;
-  
+
   return {
-    left: box.left + (window.pageXOffset - ownerDocument.documentElement.clientLeft),
-    top: box.top + (window.pageYOffset - ownerDocument.documentElement.clientTop),
+    left: box.left + (window.pageXOffset - document.documentElement.clientLeft),
+    top: box.top + (window.pageYOffset - document.documentElement.clientTop),
   };
 }
 
@@ -511,9 +510,8 @@ const IS_SAFARI = WINDOW.navigator && /(Macintosh|iPhone|iPod|iPad).*AppleWebKit
  * @param {Function} callback - The callback function.
  * @returns {HTMLImageElement} The new image.
  */
-export function getImageNaturalSizes(image, options, callback) {
-  const ownerDocument = options.topView ? top.document : document;
-  const newImage = ownerDocument.createElement('img');
+export function getImageNaturalSizes(image, callback) {
+  const newImage = document.createElement('img');
 
   // Modern browsers (except Safari)
   if (image.naturalWidth && !IS_SAFARI) {
@@ -521,7 +519,7 @@ export function getImageNaturalSizes(image, options, callback) {
     return newImage;
   }
 
-  const body = ownerDocument.body || ownerDocument.documentElement;
+  const body = document.body || document.documentElement;
 
   newImage.onload = () => {
     callback(newImage.width, newImage.height);

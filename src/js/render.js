@@ -159,7 +159,7 @@ export default {
       },
     };
 
-    sizingImage = getImageNaturalSizes(image, options,(naturalWidth, naturalHeight) => {
+    sizingImage = getImageNaturalSizes(image, (naturalWidth, naturalHeight) => {
       const aspectRatio = naturalWidth / naturalHeight;
       let width = viewerWidth;
       let height = viewerHeight;

@@ -107,8 +107,8 @@ class Viewer {
     this.length = images.length;
     this.images = images;
 
-	const ownerDocument = options.topView? top.document : element.ownerDocument;
-	
+    const ownerDocument = document;
+
     const body = ownerDocument.body || ownerDocument.documentElement;
 
     this.body = body;
@@ -178,8 +178,7 @@ class Viewer {
 
     const { element, options } = this;
     const parent = element.parentNode;
-	const ownerDocument = options.topView ? top.document : document;
-    const template = ownerDocument.createElement('div');
+    const template = document.createElement('div');
 
     template.innerHTML = TEMPLATE;
 
@@ -217,7 +216,7 @@ class Viewer {
     }
 
     if (options.toolbar) {
-      const list = ownerDocument.createElement('ul');
+      const list = document.createElement('ul');
       const custom = isPlainObject(options.toolbar);
       const zoomButtons = BUTTONS.slice(0, 3);
       const rotateButtons = BUTTONS.slice(7, 9);
@@ -243,7 +242,7 @@ class Viewer {
 
         const size = deep && !isUndefined(value.size) ? value.size : value;
         const click = deep && !isUndefined(value.click) ? value.click : value;
-        const item = ownerDocument.createElement('li');
+        const item = document.createElement('li');
 
         item.setAttribute('role', 'button');
         addClass(item, `${NAMESPACE}-${name}`);
@@ -309,7 +308,7 @@ class Viewer {
       let { container } = options;
 
       if (isString(container)) {
-        container = ownerDocument.querySelector(container);
+        container = document.querySelector(container);
       }
 
       if (!container) {

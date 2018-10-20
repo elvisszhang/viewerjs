@@ -169,6 +169,7 @@ export default {
           once: true,
         });
         this.zoomTo(0, false, false, true);
+        setTimeout(hide, 100); // 当上层弹出时，不知道为啥 EVENT_TRANSITION_END 事件没触发，加个时钟确保隐藏
       } else {
         hide();
       }
@@ -467,7 +468,7 @@ export default {
       this.zooming = true;
 
       if (_originalEvent) {
-        const offset = getOffset(this.viewer,options);
+        const offset = getOffset(this.viewer);
         const center = pointers && Object.keys(pointers).length ? getPointersCenter(pointers) : {
           pageX: _originalEvent.pageX,
           pageY: _originalEvent.pageY,
