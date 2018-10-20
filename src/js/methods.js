@@ -467,7 +467,7 @@ export default {
       this.zooming = true;
 
       if (_originalEvent) {
-        const offset = getOffset(this.viewer);
+        const offset = getOffset(this.viewer,options);
         const center = pointers && Object.keys(pointers).length ? getPointersCenter(pointers) : {
           pageX: _originalEvent.pageX,
           pageY: _originalEvent.pageY,

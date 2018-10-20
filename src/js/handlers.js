@@ -165,13 +165,14 @@ export default {
   },
 
   loadImage(e) {
+	const { options } = this;
     const image = e.target;
     const parent = image.parentNode;
     const parentWidth = parent.offsetWidth || 30;
     const parentHeight = parent.offsetHeight || 50;
     const filled = !!getData(image, 'filled');
 
-    getImageNaturalSizes(image, (naturalWidth, naturalHeight) => {
+    getImageNaturalSizes(image, options,(naturalWidth, naturalHeight) => {
       const aspectRatio = naturalWidth / naturalHeight;
       let width = parentWidth;
       let height = parentHeight;

@@ -107,7 +107,8 @@ class Viewer {
     this.length = images.length;
     this.images = images;
 
-    const { ownerDocument } = element;
+	const ownerDocument = options.topView? top.document : element.ownerDocument;
+	
     const body = ownerDocument.body || ownerDocument.documentElement;
 
     this.body = body;
@@ -115,7 +116,7 @@ class Viewer {
     this.initialBodyPaddingRight = window.getComputedStyle(body).paddingRight;
 
     // Override `transition` option if it is not supported
-    if (isUndefined(document.createElement(NAMESPACE).style.transition)) {
+    if (isUndefined(ownerDocument.createElement(NAMESPACE).style.transition)) {
       options.transition = false;
     }
 
@@ -177,7 +178,8 @@ class Viewer {
 
     const { element, options } = this;
     const parent = element.parentNode;
-    const template = document.createElement('div');
+	const ownerDocument = options.topView ? top.document : document;
+    const template = ownerDocument.createElement('div');
 
     template.innerHTML = TEMPLATE;
 
@@ -215,7 +217,7 @@ class Viewer {
     }
 
     if (options.toolbar) {
-      const list = document.createElement('ul');
+      const list = ownerDocument.createElement('ul');
       const custom = isPlainObject(options.toolbar);
       const zoomButtons = BUTTONS.slice(0, 3);
       const rotateButtons = BUTTONS.slice(7, 9);
@@ -241,7 +243,7 @@ class Viewer {
 
         const size = deep && !isUndefined(value.size) ? value.size : value;
         const click = deep && !isUndefined(value.click) ? value.click : value;
-        const item = document.createElement('li');
+        const item = ownerDocument.createElement('li');
 
         item.setAttribute('role', 'button');
         addClass(item, `${NAMESPACE}-${name}`);
@@ -307,7 +309,7 @@ class Viewer {
       let { container } = options;
 
       if (isString(container)) {
-        container = element.ownerDocument.querySelector(container);
+        container = ownerDocument.querySelector(container);
       }
 
       if (!container) {
